@@ -1,0 +1,21 @@
+### User singup endpoint
+POST http://localhost:3002/v1/user
+Content-Type: application/json
+
+{
+    "name":"demo",
+    "company":"demo",
+    "address":"demo",
+    "phone":"12345678945",
+    "email":"demo1@mail.com",
+    "password": "demo123456"
+}
+
+### User singin endpoint
+POST http://localhost:3002/v1/user/login
+Content-Type: application/json
+
+{
+    "email":"demo1@mail.com",
+    "password": "demo123456"
+}
