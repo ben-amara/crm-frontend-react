@@ -1,5 +1,6 @@
 
 const { hashPassword, comparePassword } = require('../helpers/bcrypt.helpers');
+const tokenGenerator = require('../helpers/jwt.helpers');
 const { createUser, getUserByEmail } = require('../model/user/User.model');
 
 module.exports = app => {
@@ -44,8 +45,15 @@ module.exports = app => {
             res.json({ status: "error", message: "invalide credentials.." })
         }
 
+        const tokenJWT = await tokenGenerator.generateToken(userObj.email)
+        const tokenJWTRefrsh = await tokenGenerator.refreshToken(userObj.email, userObj._id)
 
-        res.json(req.body)
+        res.json({
+            status: "success",
+            message: "Login successfully!",
+            tokenJWT,
+            tokenJWTRefrsh
+        })
     })
 
 
