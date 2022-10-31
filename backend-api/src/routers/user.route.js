@@ -1,13 +1,16 @@
 
 const { hashPassword, comparePassword } = require('../helpers/bcrypt.helpers');
 const tokenGenerator = require('../helpers/jwt.helpers');
+const { userAuthorization } = require('../middlewares/authorization.middlewares');
 const { createUser, getUserByEmail } = require('../model/user/User.model');
 
 module.exports = app => {
     const router = require('express').Router();
 
-    router.get('/', (req, res) => {
-        res.json({ 'message': 'user api is up!' })
+    router.get('/', userAuthorization, async (req, res) => {
+        const _id = req.userId
+
+        const user = await getUserById(_id)
     })
 
     // add new user
@@ -26,6 +29,7 @@ module.exports = app => {
             )
             .catch(error => res.status(500).json({ message: error.message }))
     })
+
 
     // user sign in 
     router.post('/login', async (req, res) => {

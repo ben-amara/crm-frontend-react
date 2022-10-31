@@ -24,7 +24,15 @@ const refreshToken = async (payload, _id) => {
     return Promise.resolve(refreshToken)
 }
 
+const verifyJWT = async token => {
+    try {
+        return Promise.resolve(jwt.verify(token, process.env.JWT_ACCESS_SECRET))
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
 module.exports = {
     generateToken,
-    refreshToken
+    refreshToken,
+    verifyJWT
 }

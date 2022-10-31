@@ -39,8 +39,31 @@ const storeUserRefreshJWT = (_id, token) => {
         }
     })
 }
+
+const getUserById = async (_id) => {
+
+    await UserSchema.findById(_id)
+}
 module.exports = {
     createUser,
     getUserByEmail,
-    storeUserRefreshJWT
+    storeUserRefreshJWT,
+    getUserById
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
