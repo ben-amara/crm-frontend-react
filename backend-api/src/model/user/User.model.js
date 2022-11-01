@@ -20,7 +20,7 @@ const getUserByEmail = email => {
     })
 }
 
-const storeUserRefreshJWT = (_id, token) => {
+const storeUserRefreshJWT = (token, _id) => {
     return new Promise((resolve, reject) => {
         try {
             UserSchema.findByIdAndUpdate(
@@ -41,8 +41,14 @@ const storeUserRefreshJWT = (_id, token) => {
 }
 
 const getUserById = async (_id) => {
+    return new Promise((resolve, reject) => {
+        UserSchema.findById(_id, { _id: 0, refreshJWT: 0, password: 0 }, (error, data) => {
+            if (error)
+                reject(error)
 
-    await UserSchema.findById(_id)
+            resolve(data)
+        })
+    })
 }
 module.exports = {
     createUser,

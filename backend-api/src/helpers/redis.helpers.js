@@ -2,38 +2,40 @@ const redis = require('redis');
 // url : 'redis://redis-api:6379'
 const client = redis.createClient(process.env.REDIS_URL);
 
+(async function () {
+    await client.connect()
+})();
+const setJWT = async (key, value) => {
+    try {
+        await client.set(key, value)
 
-const setJWT = (key, value) => {
-    return new Promise((resolve, reject) => {
-        try {
-            client.set(key, value, (err, resp) => {
-                if (err) reject(err)
-
-                resolve(resp)
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
+    } catch (error) {
+        reject(error)
+    }
 }
 
-const getJWT = (key) => {
-    return new Promise((resolve, reject) => {
-        try {
-            client.get(key, (err, resp) => {
-                if (err) reject(err)
+const getJWT = async (key) => {
+    try {
 
-                resolve(resp)
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
+        return Promise.resolve(client.get(key))
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
+
+const deleteJWT = async (key) => {
+    try {
+
+        client.del(key)
+    } catch (error) {
+        return Promise.reject(error)
+    }
 }
 
 module.exports = {
     setJWT,
-    getJWT
+    getJWT,
+    deleteJWT
 }
 
 

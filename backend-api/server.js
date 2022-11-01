@@ -39,6 +39,7 @@ if (process.env.NDE_ENV !== 'production') {
 }
 
 
+require('./src/routers/tokens.route')(app)
 require('./src/routers/user.route')(app)
 require('./src/routers/ticket.route')(app)
 

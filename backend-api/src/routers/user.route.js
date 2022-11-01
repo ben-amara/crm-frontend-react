@@ -2,15 +2,21 @@
 const { hashPassword, comparePassword } = require('../helpers/bcrypt.helpers');
 const tokenGenerator = require('../helpers/jwt.helpers');
 const { userAuthorization } = require('../middlewares/authorization.middlewares');
-const { createUser, getUserByEmail } = require('../model/user/User.model');
+const { setPasswordRestPin } = require('../model/restPin/RestPin.model');
+const { createUser, getUserByEmail, getUserById } = require('../model/user/User.model');
 
 module.exports = app => {
     const router = require('express').Router();
 
     router.get('/', userAuthorization, async (req, res) => {
         const _id = req.userId
+        try {
+            const user = await getUserById(_id)
+            res.status(200).json(user)
+        } catch (error) {
+            res.status(500).json(error)
+        }
 
-        const user = await getUserById(_id)
     })
 
     // add new user
@@ -49,8 +55,8 @@ module.exports = app => {
             res.json({ status: "error", message: "invalide credentials.." })
         }
 
-        const tokenJWT = await tokenGenerator.generateToken(userObj.email)
-        const tokenJWTRefrsh = await tokenGenerator.refreshToken(userObj.email, userObj._id)
+        const tokenJWT = await tokenGenerator.generateToken(userObj._id.toString(), userObj.email)
+        const tokenJWTRefrsh = await tokenGenerator.refreshToken(userObj._id.toString(), userObj.email)
 
         res.json({
             status: "success",
@@ -60,8 +66,24 @@ module.exports = app => {
         })
     })
 
+    router.post('/reset-password', async (req, res) => {
+        const { email } = req.body
+
+        const user = await getUserByEmail(email)
+        if (user && user._id) {
+
+            const setPin = await setPasswordRestPin(user.email)
+            return res.json(setPin)
+        }
+        return res.json({
+            status: 'error',
+            message: 'If the email is exist in our DB, the password reset pin will be sent shortly..'
+        })
+    })
 
 
+
+    router.post('/login', async (req, res) => { })
 
     app.use('/v1/user', router)
 }

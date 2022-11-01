@@ -19,3 +19,19 @@ Content-Type: application/json
     "email":"demo1@mail.com",
     "password": "demo123456"
 }
+
+### User reset password endpoint
+POST http://localhost:3002/v1/user/reset-password
+Content-Type: application/json
+
+{
+    "email":"demo1@mail.com"
+}
+
+### GET user profile endpoint
+GET http://localhost:3002/v1/user
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiZGVtbzFAbWFpbC5jb20iLCJpYXQiOjE2NjczMDk2NTEsImV4cCI6MTY2NzMxMDU1MX0.vLzdXHn-Q6_HNUdWVABmO0qtZGXZOQW0AFusQKfjtBg 
+
+### Refresh  user token endpoint
+GET http://localhost:3002/v1/token/refresh
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiZGVtbzFAbWFpbC5jb20iLCJpYXQiOjE2NjczMTQwNjYsImV4cCI6MTY2NzMxNDk2Nn0.18XzrAabQtzoTlRpOMYgixekmWiSL3aKcZ8-__fN2e8
