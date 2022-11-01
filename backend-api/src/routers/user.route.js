@@ -1,5 +1,6 @@
 
 const { hashPassword, comparePassword } = require('../helpers/bcrypt.helpers');
+const { sendMail } = require('../helpers/email.helpers');
 const tokenGenerator = require('../helpers/jwt.helpers');
 const { userAuthorization } = require('../middlewares/authorization.middlewares');
 const { setPasswordRestPin } = require('../model/restPin/RestPin.model');
@@ -73,7 +74,18 @@ module.exports = app => {
         if (user && user._id) {
 
             const setPin = await setPasswordRestPin(user.email)
-            return res.json(setPin)
+            const result = await sendMail(user.email, setPin.pin)
+            if (result.messageId) {
+                return res.json({
+                    status: 'success',
+                    message: 'If the email is exist in our DB, the password reset pin will be sent shortly..'
+                })
+            }
+            return res.json({
+                status: 'error',
+                message: 'Unable to process your resquet, Please try again later!'
+            })
+
         }
         return res.json({
             status: 'error',
